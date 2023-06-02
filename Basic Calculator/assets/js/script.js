@@ -13,13 +13,22 @@ function displayNumber(value) {
     if (lastChar.trim() !== '') {
       show.value += ' ' + value + ' ';
     }
-  } else if (value === '.' && !getLastNumber(show.value).includes('.')) {
+  } if (value === '.' && !getLastNumber(show.value).includes('.')) {
     show.value += value;
   }
 }
 
 function backspace(){
+  const lastWord = show.value.slice(-1);
+  console.log(lastWord);
+  if(lastWord == " "){
+    console.log("This is Empty");
+    show.value = show.value.slice(0, -3);
+  }
+  else if(lastWord !== " "){
+    console.log("this is a number");
     show.value = show.value.slice(0, -1);
+  }
 }
 
 function calculate() {
