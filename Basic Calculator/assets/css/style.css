@@ -1,0 +1,52 @@
+body{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#paragraph, .welcomeMessage{
+    text-align: center;
+}
+.displayAns {
+    margin: 0.4rem 0;
+}
+#displayAns {
+    padding: 10px;
+    width: -webkit-fill-available;
+    font-size: 15px;
+    text-align: right;
+    outline: none;
+    background: transparent;
+    border: none;
+}
+#calculatorButton, #calculatorDelete {
+    padding: 11px;
+    margin: 3px 20px;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+#calculatorButtonClear, #calculatorOperator, #calculatorEqual {
+    padding: 11px;
+    margin: 3px 20px;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    
+}
+.row{
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+    -webkit-tap-highlight-color: rgba(99, 99, 99, 0.507);
+}
+.rowContainer {
+    background: #f0f0f0;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
