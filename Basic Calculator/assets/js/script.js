@@ -116,22 +116,23 @@ function handleKeyDown(event) {
   const keyPressed = event.key;
 
   if (keyPressed === 'Backspace') {
-    event.preventDefault();
     // show.value = show.value.slice(0, -1); // Remove the last character
     backspace();
+    event.preventDefault();
   }
   else if(allowedKeysRegex.test(keyPressed)){
     promptError.textContent = "Here You can calculate me!";
     promptError.style.color = "black";
-    event.preventDefault();
     displayNumber(keyPressed);
+    event.preventDefault();
   } 
   else if (keyPressed === 'Enter') {
     event.preventDefault();
     calculate();
   } else if (!allowedKeysRegex.test(keyPressed)) {
     event.preventDefault();
-  } else {
+  }
+  else {
     if (['+', '-', '*', '/', '%'].includes(keyPressed)) {
       displayNumber(keyPressed);
       event.preventDefault();
