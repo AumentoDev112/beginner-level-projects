@@ -12,22 +12,20 @@ function displayNumber(value) {
   } else if (['+', '-', '*', '/', '%'].includes(value)) {
     if (lastChar.trim() !== '') {
       show.value += ' ' + value + ' ';
-      // show.value +=value;
     }
-  } if (value === '.' && !getLastNumber(show.value).includes('.')) {
+  } else if (value === '.' && !getLastNumber(show.value).includes('.')) {
     show.value += value;
   }
 }
 
 function backspace(){
   const lastWord = show.value.slice(-1);
-  console.log(lastWord);
   if(lastWord == " "){
-    console.log("This is Empty");
+    // console.log("This is Empty");
     show.value = show.value.slice(0, -3);
   }
   else if(lastWord !== " "){
-    console.log("this is a number");
+    // console.log("this is a number");
     show.value = show.value.slice(0, -1);
   }
 }
@@ -49,6 +47,15 @@ clickedButton.forEach((e)=>{
     promptError.textContent = "Here You can calculate me!";
     promptError.style.color = "black";
     
+  })
+})
+
+const pressedKey = document.querySelectorAll("#calculatorButton");
+pressedKey.forEach((k)=>{
+  k.addEventListener('keypress',()=>{
+    // promptError.textContent = "Here You can calculate me!";
+    // promptError.style.color = "black";
+    console.log("key Pressed");
   })
 })
 
@@ -110,8 +117,16 @@ function handleKeyDown(event) {
 
   if (keyPressed === 'Backspace') {
     event.preventDefault();
-    show.value = show.value.slice(0, -1); // Remove the last character
-  } else if (keyPressed === 'Enter') {
+    // show.value = show.value.slice(0, -1); // Remove the last character
+    backspace();
+  }
+  else if(allowedKeysRegex.test(keyPressed)){
+    promptError.textContent = "Here You can calculate me!";
+    promptError.style.color = "black";
+    event.preventDefault();
+    displayNumber(keyPressed);
+  } 
+  else if (keyPressed === 'Enter') {
     event.preventDefault();
     calculate();
   } else if (!allowedKeysRegex.test(keyPressed)) {
@@ -120,10 +135,12 @@ function handleKeyDown(event) {
     if (['+', '-', '*', '/', '%'].includes(keyPressed)) {
       displayNumber(keyPressed);
       event.preventDefault();
-    } else if (keyPressed === '+/-') {
-      displayNumber(keyPressed);
-      event.preventDefault();
-    } else if (keyPressed === '.') {
+    } 
+    // else if (keyPressed === '+/-') {
+    //   displayNumber(keyPressed);
+    //   event.preventDefault();
+    // } 
+    else if (keyPressed === '.') {
       displayNumber(keyPressed);
       event.preventDefault();
     }
