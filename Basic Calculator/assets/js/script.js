@@ -12,6 +12,7 @@ function displayNumber(value) {
   } else if (['+', '-', '*', '/', '%'].includes(value)) {
     if (lastChar.trim() !== '') {
       show.value += ' ' + value + ' ';
+      // show.value +=value;
     }
   } if (value === '.' && !getLastNumber(show.value).includes('.')) {
     show.value += value;
