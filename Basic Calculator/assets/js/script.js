@@ -1,9 +1,14 @@
 const promptError = document.getElementById("paragraph");
-
 let show = document.getElementById("displayAns");
+let isResultDisplayed = false; // Track the state of the calculator
 
 function displayNumber(value) {
   const lastChar = show.value.slice(-1);
+
+  if (isResultDisplayed) {
+    show.value = "";
+    isResultDisplayed = false;
+  }
 
   if (/\d/.test(value)) {
     show.value += value;
@@ -21,19 +26,19 @@ function backspace() {
   if (lastWord == " ") {
     // console.log("This is Empty");
     show.value = show.value.slice(0, -3);
-  }
-  else if(show.value == "NaN"){
+  } else if (show.value == "NaN") {
     show.value = "";
-  }
-  else if (lastWord !== " ") {
+  } else if (lastWord !== " ") {
     show.value = show.value.slice(0, -1);
   }
 }
 
-function calculate() {
+function calculate(event) {
   let expression = show.value;
   const result = evaluateExpression(expression);
   show.value = result;
+  isResultDisplayed = true;
+
   if (expression == "") {
     show.value = "";
     promptError.textContent = "Enter a Number First !";
@@ -49,9 +54,9 @@ clickedButton.forEach((e) => {
   });
 });
 
-
 function clearScreen() {
   show.value = "";
+  isResultDisplayed = false;
 }
 
 function evaluateExpression(expression) {
@@ -62,41 +67,44 @@ function evaluateExpression(expression) {
   for (let i = 1; i < tokens.length; i++) {
     const token = tokens[i];
 
-    if (["+", "-", "*", "/", "%"].includes(token)) {
+    if (["+", "-", "*", "/", "%", "="].includes(token)) {
       operator = token;
     } else if (operator === "%") {
       let num = parseFloat(token);
-        if (!num) {
-        return result/100;
-      } 
-        else if (num){
-          return num = (result/100)*num;
+      if (!num) {
+        return result / 100;
+      } else if (num) {
+        return (num = (result / 100) * num);
       }
     } else {
       const num = parseFloat(token);
       switch (operator) {
         case "+":
+          if (num) {
             result += num;
             break;
+          } else {
+            return result;
+          }
         case "-":
-          if(num){
+          if (num) {
             result -= num;
             break;
           } else {
             return result;
           }
         case "*":
-          if(num){
+          if (num) {
             result *= num;
             break;
-          } else{
+          } else {
             return result;
           }
         case "/":
-          if(num){
+          if (num) {
             result /= num;
             break;
-          } else{
+          } else {
             return result;
           }
       }
@@ -126,7 +134,6 @@ function moveCursorLeft() {
   }
 }
 
-// Move the cursor to the right
 function moveCursorRight() {
   const currentPosition = show.selectionStart;
 
@@ -138,14 +145,19 @@ function moveCursorRight() {
 function validatePaste(event) {
   const clipboardData = event.clipboardData || window.clipboardData;
   const pastedText = clipboardData.getData("text");
-  const onlyNumbers = pastedText.replace(/\D/g, ""); // Remove non-numeric characters
+  const onlyNumbers = pastedText.replace(/\D/g, "");
   event.preventDefault();
-  document.execCommand("insertText", false, onlyNumbers); // Insert only the numeric text
+  document.execCommand("insertText", false, onlyNumbers);
 }
 
 function handleKeyDown(event) {
   const allowedKeysRegex = /^[\d+\-*/%.]$/;
   const keyPressed = event.key;
+
+  if (isResultDisplayed && /\d/.test(keyPressed)) {
+    show.value = "";
+    isResultDisplayed = false;
+  }
 
   if (allowedKeysRegex.test(keyPressed)) {
     promptError.textContent = "Here You can calculate me!";
@@ -157,13 +169,9 @@ function handleKeyDown(event) {
     calculate();
   } else if (keyPressed === "ArrowLeft") {
     event.preventDefault();
-    // Add your custom logic for the left arrow key
-    // For example, you can move the cursor to the left
     moveCursorLeft();
   } else if (keyPressed === "ArrowRight") {
     event.preventDefault();
-    // Add your custom logic for the right arrow key
-    // For example, you can move the cursor to the right
     moveCursorRight();
   } else {
     event.preventDefault();
@@ -183,10 +191,9 @@ document.addEventListener("keydown", function (event) {
     event.preventDefault();
     var cursorElement = document.activeElement;
 
-    if(show.value == 'NaN'){
+    if (show.value == "NaN") {
       show.value = "";
-    }
-    else if(
+    } else if (
       cursorElement.tagName === "INPUT" ||
       cursorElement.tagName === "TEXTAREA"
     ) {
