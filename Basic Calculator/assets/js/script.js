@@ -21,7 +21,11 @@ function backspace() {
   if (lastWord == " ") {
     // console.log("This is Empty");
     show.value = show.value.slice(0, -3);
-  } else if (lastWord !== " ") {
+  }
+  else if(show.value == "NaN"){
+    show.value = "";
+  }
+  else if (lastWord !== " ") {
     show.value = show.value.slice(0, -1);
   }
 }
@@ -72,17 +76,29 @@ function evaluateExpression(expression) {
       const num = parseFloat(token);
       switch (operator) {
         case "+":
-          result += num;
-          break;
+            result += num;
+            break;
         case "-":
-          result -= num;
-          break;
+          if(num){
+            result -= num;
+            break;
+          } else {
+            return result;
+          }
         case "*":
-          result *= num;
-          break;
+          if(num){
+            result *= num;
+            break;
+          } else{
+            return result;
+          }
         case "/":
-          result /= num;
-          break;
+          if(num){
+            result /= num;
+            break;
+          } else{
+            return result;
+          }
       }
     }
   }
@@ -167,7 +183,10 @@ document.addEventListener("keydown", function (event) {
     event.preventDefault();
     var cursorElement = document.activeElement;
 
-    if (
+    if(show.value == 'NaN'){
+      show.value = "";
+    }
+    else if(
       cursorElement.tagName === "INPUT" ||
       cursorElement.tagName === "TEXTAREA"
     ) {
