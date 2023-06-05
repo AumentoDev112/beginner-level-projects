@@ -15,7 +15,7 @@
     <p id="paragraph">Here You can calculate me!</p>
     <div class="calculatorContainer">
       <div class="displayAns">
-        <input type="text" name="display" id="displayAns" oncut="return false" onpaste="return false" />
+        <input type="text" name="display" id="displayAns" onpaste="validatePaste(event)" />
       </div>
       <hr />
       <div class="rowContainer">
@@ -29,6 +29,7 @@
             type="button"
             id="calculatorDelete"
             value="⌫"
+            name = "backspace"
             onclick="backspace()"
           />
           <input
