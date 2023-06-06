@@ -1,29 +1,37 @@
 const promptError = document.getElementById("paragraph");
-let show = document.getElementById("displayAns");
-let isResultDisplayed = false; // Track the state of the calculator
+const show = document.getElementById("displayAns");
+const equalButton = document.getElementById("calculatorEqual");
+const clearButton = document.getElementById("calculatorButtonClear");
+const calculatorButtons = document.querySelectorAll(".row");
+
+let isResultDisplayed = false;
+
+equalButton.addEventListener("click", calculate);
+clearButton.addEventListener("click", clearScreen);
+show.addEventListener("keydown", handleKeyDown);
+document.addEventListener("keydown", handleBackspace);
+
+calculatorButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    promptError.textContent = "Here You can calculate me!";
+    promptError.style.color = "black";
+  });
+});
 
 function displayNumber(value) {
   const lastChar = show.value.slice(-1);
 
   if (/\d/.test(value)) {
     if (isResultDisplayed) {
-      if(lastChar==" "){
-        show.value += value;
-        isResultDisplayed = false;
-      } else {
-          show.value = value;
-          isResultDisplayed = false;
-      }
-      // show.value = value;
-      // isResultDisplayed = false;
+      show.value = (lastChar === " ") ? show.value + value : value;
+      isResultDisplayed = false;
     } else {
       show.value += value;
     }
   } else if (["+", "-", "*", "/", "%"].includes(value)) {
     if (lastChar.trim() !== "") {
       show.value += " " + value + " ";
-    }
-    else if(lastChar == " " ){
+    } else if (lastChar === " ") {
       show.value = show.value.slice(0, -2) + value + " ";
     }
   } else if (value === "." && !getLastNumber(show.value).includes(".")) {
@@ -38,36 +46,28 @@ function displayNumber(value) {
 
 function backspace() {
   const lastWord = show.value.slice(-1);
-  if (lastWord == " ") {
-    // console.log("This is Empty");
+
+  if (lastWord === " ") {
     show.value = show.value.slice(0, -3);
-  } else if (show.value == "NaN") {
+  } else if (show.value === "NaN") {
     show.value = "";
   } else if (lastWord !== " ") {
     show.value = show.value.slice(0, -1);
   }
 }
 
-function calculate(event) {
-  let expression = show.value;
+function calculate() {
+  const expression = show.value;
   const result = evaluateExpression(expression);
   show.value = result;
   isResultDisplayed = true;
 
-  if (expression == "") {
+  if (expression === "") {
     show.value = "";
-    promptError.textContent = "Enter a Number First !";
+    promptError.textContent = "Enter a Number First!";
     promptError.style.color = "red";
   }
 }
-
-const clickedButton = document.querySelectorAll(".row");
-clickedButton.forEach((e) => {
-  e.addEventListener("click", () => {
-    promptError.textContent = "Here You can calculate me!";
-    promptError.style.color = "black";
-  });
-});
 
 function clearScreen() {
   show.value = "";
@@ -85,43 +85,33 @@ function evaluateExpression(expression) {
     if (["+", "-", "*", "/", "%", "="].includes(token)) {
       operator = token;
     } else if (operator === "%") {
-      let num = parseFloat(token);
-      if (!num) {
-        return result / 100;
-      } else if (num) {
-        return (num = (result / 100) * num);
+      const num = parseFloat(token);
+      if (!isNaN(num)) {
+        result += (result / 100) * num;
       }
     } else {
       const num = parseFloat(token);
       switch (operator) {
         case "+":
-          if (num) {
+          if (!isNaN(num)) {
             result += num;
-            break;
-          } else {
-            return result;
           }
+          break;
         case "-":
-          if (num) {
+          if (!isNaN(num)) {
             result -= num;
-            break;
-          } else {
-            return result;
           }
+          break;
         case "*":
-          if (num) {
+          if (!isNaN(num)) {
             result *= num;
-            break;
-          } else {
-            return result;
           }
+          break;
         case "/":
-          if (num) {
+          if (!isNaN(num)) {
             result /= num;
-            break;
-          } else {
-            return result;
           }
+          break;
       }
     }
   }
@@ -161,19 +151,16 @@ function validatePaste(event) {
   const clipboardData = event.clipboardData || window.clipboardData;
   const pastedText = clipboardData.getData("text");
   const cleanedText = pastedText.replace(/[^0-9+\-*/%.]/g, "");
-  const formattedText = cleanedText.replace(/([+\-*/%.])/g, " $1 ");
+  const formattedText = cleanedText.replace(/([+\-*/%.])/g, " ");
   event.preventDefault();
   document.execCommand("insertText", false, formattedText);
 }
-
 
 function handleKeyDown(event) {
   const allowedKeysRegex = /^[\d+\-*/%.]$/;
   const keyPressed = event.key;
 
   if (isResultDisplayed && /\d/.test(keyPressed)) {
-    // show.value = "";
-    // isResultDisplayed = false;
     displayNumber();
   }
 
@@ -196,43 +183,9 @@ function handleKeyDown(event) {
   }
 }
 
-show.addEventListener("keydown", handleKeyDown);
-const equal = document
-  .getElementById("calculatorEqual")
-  .addEventListener("click", calculate);
-document
-  .getElementById("calculatorButtonClear")
-  .addEventListener("click", clearScreen);
-
-document.addEventListener("keydown", function (event) {
-  if (event.keyCode === 8) {
-    const lastWord = show.value.slice(-1);
+function handleBackspace(event) {
+  if (event.key === "Backspace") {
+    backspace();
     event.preventDefault();
-    var cursorElement = document.activeElement;
-
-    if (show.value == "NaN") {
-      show.value = "";
-    } else if (
-      cursorElement.tagName === "INPUT" ||
-      cursorElement.tagName === "TEXTAREA"
-    ) {
-      var cursorPosition = cursorElement.selectionStart;
-      var value = cursorElement.value;
-        if(lastWord == " "){
-          var updatedValue =
-          value.substring(0, cursorPosition - 3) +
-          value.substring(cursorPosition);
-          cursorElement.value = updatedValue;
-          cursorElement.selectionStart = cursorPosition - 1;
-          cursorElement.selectionEnd = cursorPosition - 1;
-        } else{
-        var updatedValue =
-          value.substring(0, cursorPosition - 1) +
-          value.substring(cursorPosition);
-        cursorElement.value = updatedValue;
-        cursorElement.selectionStart = cursorPosition - 1;
-        cursorElement.selectionEnd = cursorPosition - 1;
-        }
-      }
   }
-});
+}
