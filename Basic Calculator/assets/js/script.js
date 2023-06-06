@@ -87,7 +87,7 @@ function evaluateExpression(expression) {
     } else if (operator === "%") {
       const num = parseFloat(token);
       if (!isNaN(num)) {
-        result += (result / 100) * num;
+        result = (result / 100) * num; 
       }
     } else {
       const num = parseFloat(token);
