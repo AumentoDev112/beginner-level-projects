@@ -5,6 +5,8 @@ let isResultDisplayed = false; // Track the state of the calculator
 function displayNumber(value) {
   const lastChar = show.value.slice(-1);
 
+  
+
   if (/\d/.test(value)) {
     show.value += value;
   } else if (["+", "-", "*", "/", "%"].includes(value)) {
@@ -14,7 +16,7 @@ function displayNumber(value) {
   } else if (value === "." && !getLastNumber(show.value).includes(".")) {
     show.value += value;
   }
-  if (isResultDisplayed) {
+  else if (isResultDisplayed) {
     show.value = "";
     isResultDisplayed = false;
   }
