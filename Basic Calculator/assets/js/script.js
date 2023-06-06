@@ -160,10 +160,12 @@ function moveCursorRight() {
 function validatePaste(event) {
   const clipboardData = event.clipboardData || window.clipboardData;
   const pastedText = clipboardData.getData("text");
-  const onlyNumbers = pastedText.replace(/\D/g, "");
+  const cleanedText = pastedText.replace(/[^0-9+\-*/%.]/g, "");
+  const formattedText = cleanedText.replace(/([+\-*/%.])/g, " $1 ");
   event.preventDefault();
-  document.execCommand("insertText", false, onlyNumbers);
+  document.execCommand("insertText", false, formattedText);
 }
+
 
 function handleKeyDown(event) {
   const allowedKeysRegex = /^[\d+\-*/%.]$/;
