@@ -5,20 +5,31 @@ let isResultDisplayed = false; // Track the state of the calculator
 function displayNumber(value) {
   const lastChar = show.value.slice(-1);
 
-  
-
   if (/\d/.test(value)) {
-    show.value += value;
+    if (isResultDisplayed) {
+      if(lastChar==" "){
+        show.value += value;
+        isResultDisplayed = false;
+      } else {
+          show.value = value;
+          isResultDisplayed = false;
+      }
+      // show.value = value;
+      // isResultDisplayed = false;
+    } else {
+      show.value += value;
+    }
   } else if (["+", "-", "*", "/", "%"].includes(value)) {
     if (lastChar.trim() !== "") {
       show.value += " " + value + " ";
     }
   } else if (value === "." && !getLastNumber(show.value).includes(".")) {
-    show.value += value;
-  }
-  else if (isResultDisplayed) {
-    show.value = "";
-    isResultDisplayed = false;
+    if (isResultDisplayed) {
+      show.value = "0.";
+      isResultDisplayed = false;
+    } else {
+      show.value += value;
+    }
   }
 }
 
@@ -156,8 +167,9 @@ function handleKeyDown(event) {
   const keyPressed = event.key;
 
   if (isResultDisplayed && /\d/.test(keyPressed)) {
-    show.value = "";
-    isResultDisplayed = false;
+    // show.value = "";
+    // isResultDisplayed = false;
+    displayNumber();
   }
 
   if (allowedKeysRegex.test(keyPressed)) {
