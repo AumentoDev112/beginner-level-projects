@@ -41,7 +41,7 @@ function displayNumber(value) {
     } else {
       show.value += value;
     }
-  } 
+  }
 }
 
 function backspace() {
