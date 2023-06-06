@@ -41,13 +41,7 @@ function displayNumber(value) {
     } else {
       show.value += value;
     }
-  } else if (value === "+/-") {
-    const lastNumber = getLastNumber(show.value);
-    if (lastNumber !== "") {
-      const convertedNumber = parseFloat(lastNumber) * -1;
-      show.value = show.value.slice(0, -lastNumber.length) + convertedNumber;
-    }
-  }
+  } 
 }
 
 function backspace() {
@@ -189,9 +183,42 @@ function handleKeyDown(event) {
   }
 }
 
-function handleBackspace(event) {
-  if (event.key === "Backspace") {
-    backspace();
+// function handleBackspace(event) {
+//   if (event.key === "Backspace") {
+//     backspace();
+//     event.preventDefault();
+//   }
+// }
+
+function handleBackspace(){
+  if (event.keyCode === 8) {
+    const lastWord = show.value.slice(-1);
     event.preventDefault();
+    var cursorElement = document.activeElement;
+
+    if (show.value == "NaN") {
+      show.value = "";
+    } else if (
+      cursorElement.tagName === "INPUT" ||
+      cursorElement.tagName === "TEXTAREA"
+    ) {
+      var cursorPosition = cursorElement.selectionStart;
+      var value = cursorElement.value;
+        if(lastWord == " "){
+          var updatedValue =
+          value.substring(0, cursorPosition - 3) +
+          value.substring(cursorPosition);
+          cursorElement.value = updatedValue;
+          cursorElement.selectionStart = cursorPosition - 1;
+          cursorElement.selectionEnd = cursorPosition - 1;
+        } else{
+        var updatedValue =
+          value.substring(0, cursorPosition - 1) +
+          value.substring(cursorPosition);
+        cursorElement.value = updatedValue;
+        cursorElement.selectionStart = cursorPosition - 1;
+        cursorElement.selectionEnd = cursorPosition - 1;
+        }
+      }
   }
 }
