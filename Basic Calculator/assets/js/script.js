@@ -2,7 +2,7 @@ const promptError = document.getElementById("paragraph");
 const show = document.getElementById("displayAns");
 const equalButton = document.getElementById("calculatorEqual");
 const clearButton = document.getElementById("calculatorButtonClear");
-const calculatorButtons = document.querySelectorAll(".row");
+const calculatorButtons = document.querySelectorAll("#calculatorButton");
 
 let isResultDisplayed = false;
 
@@ -40,6 +40,12 @@ function displayNumber(value) {
       isResultDisplayed = false;
     } else {
       show.value += value;
+    }
+  } else if (value === "+/-") {
+    const lastNumber = getLastNumber(show.value);
+    if (lastNumber !== "") {
+      const convertedNumber = parseFloat(lastNumber) * -1;
+      show.value = show.value.slice(0, -lastNumber.length) + convertedNumber;
     }
   }
 }
