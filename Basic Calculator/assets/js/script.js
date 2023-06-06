@@ -156,8 +156,8 @@ function moveCursorRight() {
 function validatePaste(event) {
   const clipboardData = event.clipboardData || window.clipboardData;
   const pastedText = clipboardData.getData("text");
-  const cleanedText = pastedText.replace(/[^0-9+\-*/%.]/g, "");
-  const formattedText = cleanedText.replace(/([+\-*/%.])/g, " ");
+  const cleanedText = pastedText.replace(/[^0-9+\-*/%.]/g, " ");
+  const formattedText = cleanedText.replace(/([+\-*/%.])/g, " $1 ");
   event.preventDefault();
   document.execCommand("insertText", false, formattedText);
 }
